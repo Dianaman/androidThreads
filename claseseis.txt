@@ -1,0 +1,61 @@
+Clase 6:
+
+conexion a servidor o a internet
+
+consumir api
+
+peticiones demorar x tiempo
+no se puede hacer nada que demore en el hilo de la gráfica (onCreate), no podemos frenar la ejecución o tiraría cartel de "dejó de funcionar"
+|
+v
+ejecución en 2do plano
+hijo o proceso
+-ajax para javascript (segundo plano, no es proceso)
+
+hilo principal:
+public static void main() en java
+protected void onCreate() en android
+
+Debemos lanzar en otro hilo todo lo que se vaya a tardar y que luego nos informe lo q deba informar
+
+En Java cualquier instancia de la clase Thread corre en otro plano
+Debemos llamar desde nuestro hilo principal al método de instancia start del objeto que extiende de Thread
+
+public class MiHilo extends Thread {}
+
+MiHilo hilo = new MiHilo();
+hilo.start();
+
+luego debemos sobreescribir en MiHilo el método run
+
+@Override
+public void run(){
+}
+
+No se puede modificar los elementos de la pantalla desde otro hilo por cuestiones de seguridad
+
+Cola de mensajes a través de un objeto intermedio que conocen ambos hilos
+El hilo de la gráfica es el que va a estar leyendo siempre la cola d e mensajes viendo si hay mensajes nuevos. Bucles infinitos.
+
+Cola compartida = Handler
+al Handler le debemos pasar por el constructor un objeto que herede de async, para eso podemos hacer que nuestro activity implemente Handler.Callback
+
+Si hay algo en la cola (handler), lo saca y lo procesa (en el handleMessage)
+
+
+Generamos un objeto URL y abrimos una conexión con esa URL
+URL url = new URL("www.lslutnfra.com/alumnos/practicas/listaPersonas.xml");
+            URLConnection connection = url.openConnection();
+
+para hacer la conexión debemos ejecutar el método connect
+connection.connect();
+
+Como queda abierta la conexión podemos quedar escuchando lo que contiene
+InputStream is = connection.getInputStream();
+
+Debemos agregar el permiso 
+<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+dentro del manifest y antes del activity
+
+en versiones nuevas de android debemos agregar esto en el application
+android:usesCleartextTraffic="true" (si cambiamos esto debemos desinstalar por completo la app del emulador/celular)
